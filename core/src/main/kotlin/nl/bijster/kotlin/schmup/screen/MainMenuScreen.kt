@@ -24,7 +24,7 @@ class MainMenuScreen(val game: Schmup) : Screen {
 
         game.batch.begin()
         game.font.draw(game.batch, "Welcome to Drop!!! ", 100f, 150f)
-        game.font.draw(game.batch, "Tap anywhere to begin!", 100f, 100f)
+        game.font.draw(game.batch, "Tap anywhere or press any key to begin!", 100f, 100f)
         game.batch.end()
 
         if (Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
