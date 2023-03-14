@@ -2,7 +2,7 @@ package nl.bijster.kotlin.shmup.lwjgl3
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import nl.bijster.kotlin.schmup.Schmup
+import nl.bijster.kotlin.schmup.Shmup
 
 
 fun main() {
@@ -10,7 +10,7 @@ fun main() {
 }
 
 private fun createApplication(): Lwjgl3Application {
-    return Lwjgl3Application(Schmup(), Lwjgl3ApplicationConfiguration().apply {
+    return Lwjgl3Application(Shmup(), Lwjgl3ApplicationConfiguration().apply {
         setTitle("SchmupKotlin")
         useVsync(true)
         setWindowedMode(1280, 960)
