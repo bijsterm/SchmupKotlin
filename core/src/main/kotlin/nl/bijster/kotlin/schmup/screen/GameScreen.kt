@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.MathUtils
@@ -15,7 +14,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import ktx.app.KtxScreen
 import nl.bijster.kotlin.schmup.Shmup
 
-class GameScreen(val shmup: Shmup) : KtxScreen {
+class GameScreen(private val shmup: Shmup) : KtxScreen {
 
     // load the images for the droplet & bucket, 64x64 pixels each
     private val dropImage: Texture = Texture(Gdx.files.internal("images/drop.png"))
@@ -24,7 +23,7 @@ class GameScreen(val shmup: Shmup) : KtxScreen {
     // load the drop sound effect and the rain background music
     private val dropSound: Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/drop.wav"))
     private val rainMusic: Music = Gdx.audio.newMusic(Gdx.files.internal("music/rain.mp3")).apply {
-        setLooping(true)
+        isLooping = true
     }
 
     // The camera ensures we can render using our target resolution of 800x480
@@ -65,25 +64,25 @@ class GameScreen(val shmup: Shmup) : KtxScreen {
 
         // begin a new batch and draw the bucket and all drops
         shmup.batch.begin()
-        shmup.font.draw(shmup.batch, "Drops Collected: " + dropsGathered, 0f, 480f)
-        shmup.batch.draw(bucketImage, bucket.x, bucket.y,bucket.width, bucket.height)
+        shmup.font.draw(shmup.batch, "Drops Collected: $dropsGathered", 0f, 480f)
+        shmup.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height)
         for (raindrop in raindrops) {
             shmup.batch.draw(dropImage, raindrop.x, raindrop.y)
         }
         shmup.batch.end()
 
         // process user input
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(),0f)
+        if (Gdx.input.isTouched) {
+            touchPos.set(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)
             camera.unproject(touchPos)
             bucket.x = touchPos.x - 64f / 2f
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             // getDeltaTime returns the time passed between the last and the current frame in seconds
-            bucket.x -= 200 * Gdx.graphics.getDeltaTime()
+            bucket.x -= 300 * Gdx.graphics.deltaTime
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            bucket.x += 200 * Gdx.graphics.getDeltaTime()
+            bucket.x += 300 * Gdx.graphics.deltaTime
         }
 
         // make sure the bucket stays within the screen bounds
@@ -99,7 +98,7 @@ class GameScreen(val shmup: Shmup) : KtxScreen {
         val iter = raindrops.iterator()
         while (iter.hasNext()) {
             val raindrop = iter.next()
-            raindrop.y -= 200 * Gdx.graphics.getDeltaTime()
+            raindrop.y -= 200 * Gdx.graphics.deltaTime
             if (raindrop.y + 64 < 0)
                 iter.remove()
 
@@ -110,14 +109,6 @@ class GameScreen(val shmup: Shmup) : KtxScreen {
             }
         }
     }
-
-    // the following overrides are no-ops, unused in tutorial, but needed in
-    //    order to compile a class that implements Screen
-    override fun resize(width: Int, height: Int) {}
-
-    override fun hide() {}
-    override fun pause() {}
-    override fun resume() {}
 
     override fun show() {
         shmup.font.data.setScale(5f)
