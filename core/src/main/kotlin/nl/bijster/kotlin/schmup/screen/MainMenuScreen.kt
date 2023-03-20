@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import ktx.app.KtxScreen
 import nl.bijster.kotlin.schmup.Shmup
+import nl.bijster.kotlin.schmup.types.HiScoreTable
 
 /** First screen of the application. Displayed after the application is created.  */
 class MainMenuScreen(private val shmup: Shmup) : KtxScreen {
+
     private val camera = OrthographicCamera().apply {
         setToOrtho(false, 800f, 480f)
     }
@@ -16,8 +18,11 @@ class MainMenuScreen(private val shmup: Shmup) : KtxScreen {
         camera.update()
         shmup.batch.projectionMatrix = camera.combined
 
+        val scores = HiScoreTable.get().map { pair -> pair.first }
+
         shmup.batch.begin()
-        shmup.font.draw(shmup.batch, "Welcome to Drop!!! ", 100f, 150f)
+        shmup.font.draw(shmup.batch, "Welcome to Drop!!! ", 100f, 200f)
+        shmup.font.draw(shmup.batch, "Hiscores: ${scores} ", 100f, 150f)
         shmup.font.draw(shmup.batch, "Tap anywhere or press any key to begin!", 100f, 100f)
         shmup.batch.end()
 
