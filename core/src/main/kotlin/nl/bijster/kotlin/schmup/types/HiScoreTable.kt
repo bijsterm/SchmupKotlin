@@ -1,11 +1,16 @@
 package nl.bijster.kotlin.schmup.types
 
+
 class HiScoreTable() {
 
+
     companion object HiScores {
-        val scoreComparator = compareByDescending<Pair<Int, Double>> { it.first }
-        val ScoreAndLevelComparator = scoreComparator.thenByDescending { it.second }
-        private var hiScores: MutableList<Pair<Int, Double>> = ArrayList()
+
+        private val scoreComparator = compareByDescending<Pair<Int, Double>> { it.first }
+        private val ScoreAndLevelComparator = scoreComparator.thenByDescending { it.second }
+
+        // Initialize with 10 zero scores
+        private var hiScores = MutableList(10) { Pair(0, 1.0) }
 
         fun get(key: Int): Pair<Int, Double> {
             return hiScores[key]
