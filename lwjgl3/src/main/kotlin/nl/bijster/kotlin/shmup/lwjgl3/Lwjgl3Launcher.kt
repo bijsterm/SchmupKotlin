@@ -6,14 +6,12 @@ import nl.bijster.kotlin.schmup.Shmup
 
 
 fun main() {
-    createApplication()
-}
-
-private fun createApplication(): Lwjgl3Application {
-    return Lwjgl3Application(Shmup(), Lwjgl3ApplicationConfiguration().apply {
+    val config = Lwjgl3ApplicationConfiguration().apply {
         setTitle("SchmupKotlin")
         useVsync(true)
         setWindowedMode(1280, 960)
         setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png")
-    })
+    }
+    Lwjgl3Application(Shmup(), config)
 }
+

@@ -1,5 +1,7 @@
 package nl.bijster.kotlin.schmup
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ktx.app.KtxGame
@@ -12,6 +14,9 @@ class Shmup : KtxGame<KtxScreen>() {
     val font by lazy {BitmapFont()}
 
     override fun create() {
+
+        Gdx.app.logLevel = Application.LOG_DEBUG
+
         addScreen(MainMenuScreen(this))
         setScreen<MainMenuScreen>()
         super.create()

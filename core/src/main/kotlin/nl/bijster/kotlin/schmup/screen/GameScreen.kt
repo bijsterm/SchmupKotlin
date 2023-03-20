@@ -10,16 +10,18 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.TimeUtils
 import ktx.app.KtxScreen
+import ktx.graphics.use
+import ktx.log.logger
 import nl.bijster.kotlin.schmup.Shmup
 import nl.bijster.kotlin.schmup.player.Player
 import nl.bijster.kotlin.schmup.types.HiScoreTable
 
+private val log = logger<GameScreen>()
+
 class GameScreen(private val shmup: Shmup) : KtxScreen {
 
-    val player: Player = Player(3)
+    private val player: Player = Player(3)
 
-    // load the images for the droplet & bucket, 64x64 pixels each
-    private val dropImage: Texture = Texture(Gdx.files.internal("images/drop.png"))
 
     // load the drop sound effect and the rain background music
     private val dropSound: Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/drop.wav"))
@@ -34,7 +36,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     }
 
 
-
+    // load the images for the droplet, 64x64 pixels each
+    private val dropImage: Texture = Texture(Gdx.files.internal("images/drop.png"))
 
     // create the raindrops array and spawn the first raindrop
     private var raindrops: Array<Rectangle> = Array<Rectangle>()
@@ -49,30 +52,33 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
 
     override fun render(delta: Float) {
         // Alle updates
+
+        // 1. Player first!!
         player.update(delta)
 
-        // generally good practice to update the camera's matrices once per frame
-        camera.update()
-        // tell the SpriteBatch to render in the coordinate system specified by the camera.
-        shmup.batch.projectionMatrix = camera.combined
+        // 2. Player Bullets
 
-        // begin a new batch and draw the bucket and all drops
-        shmup.batch.begin()
+        // 3. Attack-waves
 
-        // 0. Text
-        shmup.font.draw(shmup.batch, "Nr. Lives: ${player.nrOfLives} \t Drops Avoided: $score", 0f, 480f)
 
-        // 1. Draw player first
-        player.draw(shmup.batch)
+        // begin a new batch and draw all
+        shmup.batch.use {
+            // 0. Text
+            shmup.font.draw(it, "Score: $score", 0f, 480f)
+            shmup.font.draw(it, "Nr. Lives: ${player.nrOfLives}", 500f, 480f)
+            // 1. Draw player first
+            player.draw(it)
 
-        // 2. Attachwaves
-        for (raindrop in raindrops) {
-            shmup.batch.draw(dropImage, raindrop.x, raindrop.y)
+            // 2. Attachwaves
+            raindrops.forEach { raindrop ->
+                shmup.batch.draw(dropImage, raindrop.x, raindrop.y)
+            }
+
+            // 3. Bullets
+
+            // 4. Player Hit-box, must be upper-level!
+
         }
-        // 3. Bullets
-        // 4. Player Hitbox
-
-        shmup.batch.end()
 
 
         // check if we need to create a new raindrop
@@ -89,6 +95,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
             if (raindrop.y + 64 < 0) {
                 iter.remove()
                 score++
+                log.debug { "Score is: $score" }
             }
             if (raindrop.overlaps(player.playerRectangle)) {
                 dropSound.play()
@@ -111,6 +118,13 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     }
 
     override fun show() {
+
+        // generally good practice to update the camera's matrices once per frame
+        camera.update()
+        // tell the SpriteBatch to render in the coordinate system specified by the camera.
+        shmup.batch.projectionMatrix = camera.combined
+
+
         shmup.font.data.setScale(3f)
 
         // start the playback of the background music when the screen is shown
