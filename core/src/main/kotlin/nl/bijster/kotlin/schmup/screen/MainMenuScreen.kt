@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import ktx.app.KtxScreen
 import ktx.graphics.use
 import nl.bijster.kotlin.schmup.Shmup
+import nl.bijster.kotlin.schmup.constants.SCREEN_HEIGHT
+import nl.bijster.kotlin.schmup.constants.SCREEN_WIDTH
 import nl.bijster.kotlin.schmup.types.HiScoreTable
 
 /** First screen of the application. Displayed after the application is created.  */
 class MainMenuScreen(private val shmup: Shmup) : KtxScreen {
 
     private val camera = OrthographicCamera().apply {
-        setToOrtho(false, 800f, 480f)
+        setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT)
     }
 
     override fun render(delta: Float) {
@@ -22,9 +24,9 @@ class MainMenuScreen(private val shmup: Shmup) : KtxScreen {
         }
 
         shmup.batch.use {
-            shmup.font.draw(it, "Welcome to Drop!!! ", 100f, 200f)
-            shmup.font.draw(it, "Hi-scores: $scores ", 100f, 150f)
-            shmup.font.draw(it, "Tap anywhere or press any key to begin!", 100f, 100f)
+            shmup.font.draw(it, "Welcome to Drop!!! ", 100f, SCREEN_HEIGHT - 200)
+            shmup.font.draw(it, "Hi-scores: $scores ", 100f, SCREEN_HEIGHT - 400)
+            shmup.font.draw(it, "Tap anywhere or press any key to begin!", 100f, SCREEN_HEIGHT - 700)
         }
 
         if (Gdx.input.isTouched || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
@@ -39,7 +41,7 @@ class MainMenuScreen(private val shmup: Shmup) : KtxScreen {
         camera.update()
         shmup.batch.projectionMatrix = camera.combined
 
-        shmup.font.data.setScale(1f)
+        shmup.font.data.setScale(3f)
     }
 
 }

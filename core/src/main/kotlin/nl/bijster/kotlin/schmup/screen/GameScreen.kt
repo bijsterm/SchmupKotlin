@@ -32,7 +32,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     // The camera ensures we can render using our target resolution of 800x480
     //    pixels no matter what the screen resolution is.
     private val camera: OrthographicCamera = OrthographicCamera().apply {
-        setToOrtho(false, 800f, 480f)
+        setToOrtho(false, 800f, 600f)
     }
 
 
@@ -46,7 +46,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     private var score: Int = 0
 
     private fun spawnRaindrop() {
-        raindrops.add(Rectangle(MathUtils.random(0f, 800f - 64f), 480f, 64f, 64f))
+        raindrops.add(Rectangle(MathUtils.random(0f, 800f - 64f), 600f, 64f, 64f))
         lastDropTime = TimeUtils.nanoTime()
     }
 
@@ -64,8 +64,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         // begin a new batch and draw all
         shmup.batch.use {
             // 0. Text
-            shmup.font.draw(it, "Score: $score", 0f, 480f)
-            shmup.font.draw(it, "Nr. Lives: ${player.nrOfLives}", 500f, 480f)
+            shmup.font.draw(it, "Score: $score", 0f, 600f)
+            shmup.font.draw(it, "Nr. Lives: ${player.nrOfLives}", 500f, 600f)
             // 1. Draw player first
             player.draw(it)
 
@@ -97,7 +97,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
                 score++
                 log.debug { "Score is: $score" }
             }
-            if (raindrop.overlaps(player.playerRectangle)) {
+            if (raindrop.overlaps(player.playerSprite.boundingRectangle)) {
                 dropSound.play()
                 iter.remove()
 
@@ -128,7 +128,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         shmup.font.data.setScale(3f)
 
         // start the playback of the background music when the screen is shown
-        rainMusic.play()
+        // TODO: rainMusic.play()
     }
 
     override fun dispose() {
