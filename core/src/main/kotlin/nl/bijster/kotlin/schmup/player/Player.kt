@@ -6,25 +6,40 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
+import ktx.log.debug
 import nl.bijster.kotlin.schmup.constants.SCREEN_WIDTH
 import nl.bijster.kotlin.schmup.types.GameObject
+import nl.bijster.kotlin.schmup.types.GameObjectFlow
 
 const val PLAYER_SPEED = 300f
 
-class Player(var nrOfLives: Int) : GameObject() {
+class Player(var nrOfLives: Int) : GameObjectFlow {
 
     private val playerImage: Texture = Texture(Gdx.files.internal("images/bucket.png"))
 // TODO:   private val playerHitboxImage: Texture = Texture(Gdx.files.internal("images/Player_Hitbox.png"))
 
-    val playerSprite = Sprite(playerImage).apply {
-        x = (SCREEN_WIDTH - width) / 2f // center the bucket horizontally
-        y = 20f // bottom left bucket corner is 20px above
-        setOriginCenter()
-    }
-
+    lateinit var playerGameObject: GameObject
+    private lateinit var playerSprite: Sprite
     fun die(): Boolean {
         nrOfLives -= 1
+        playerGameObject.hasCollided = false // reset hasCollided
+        debug { "Nr of lives: $nrOfLives" }
         return (nrOfLives == 0)
+    }
+
+    private fun createPlayerGameObject() {
+        playerSprite = Sprite(playerImage).apply {
+            x = (SCREEN_WIDTH - width) / 2f // center the bucket horizontally
+            y = 20f // bottom left bucket corner is 20px above
+            setOriginCenter()
+        }
+        playerGameObject = GameObject().apply {
+            sprite = playerSprite
+        }
+    }
+
+    override fun init() {
+        createPlayerGameObject()
     }
 
     override fun update(deltaTime: Float) {
