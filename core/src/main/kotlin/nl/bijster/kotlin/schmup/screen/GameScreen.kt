@@ -7,7 +7,8 @@ import ktx.app.KtxScreen
 import ktx.graphics.use
 import nl.bijster.kotlin.schmup.Shmup
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
-import nl.bijster.kotlin.schmup.attackwave.drops.Drops
+import nl.bijster.kotlin.schmup.attackwave.drops.GreenDrops
+import nl.bijster.kotlin.schmup.attackwave.drops.PurpleDrops
 import nl.bijster.kotlin.schmup.player.Player
 import nl.bijster.kotlin.schmup.scores.HiScoreTable
 import nl.bijster.kotlin.schmup.scores.Score
@@ -16,7 +17,8 @@ import nl.bijster.kotlin.schmup.scores.Score
 class GameScreen(private val shmup: Shmup) : KtxScreen {
 
     private val player: Player = Player(3)
-    private val drops: AttackWave = Drops()
+    private val greenDrops: AttackWave = GreenDrops()
+    private val purpleDrops: AttackWave = PurpleDrops()
 
     // load the drop sound effect and the rain background music
     private val rainMusic: Music = Gdx.audio.newMusic(Gdx.files.internal("music/rain.mp3")).apply {
@@ -40,9 +42,11 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         // 2. Player Bullets
 
         // 3. Attack-waves
-        drops.update(delta)
+        greenDrops.update(delta)
+        purpleDrops.update(delta)
 
-        drops.detectAndHandleCollision(player.playerGameObject)
+        greenDrops.detectAndHandleCollision(player.playerGameObject)
+        purpleDrops.detectAndHandleCollision(player.playerGameObject)
 
         if (player.playerGameObject.hasCollided) {
             val gameOver = player.die()
@@ -62,7 +66,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
             // 1. Draw player first
             player.draw(it)
 
-            drops.draw(it)
+            greenDrops.draw(it)
+            purpleDrops.draw(it)
 
             // 3. Bullets
 
@@ -82,7 +87,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     override fun show() {
 
         player.init()
-        drops.init()
+        greenDrops.init()
+        purpleDrops.init()
 
         // generally good practice to update the camera's matrices once per frame
         camera.update()
@@ -100,6 +106,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         rainMusic.dispose()
 
         player.dispose()
-        drops.cleanup()
+        greenDrops.cleanup()
+        purpleDrops.cleanup()
     }
 }

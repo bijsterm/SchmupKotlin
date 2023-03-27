@@ -13,9 +13,9 @@ import nl.bijster.kotlin.schmup.attackwave.AttackWave
 import nl.bijster.kotlin.schmup.scores.Score
 import nl.bijster.kotlin.schmup.types.GameObject
 
-private val log = logger<Drops>()
+private val log = logger<GreenDrops>()
 
-class Drops : AttackWave {
+class GreenDrops : AttackWave {
 
     // load the images for the droplet, 64x64 pixels each
     private lateinit var dropImage: Texture
