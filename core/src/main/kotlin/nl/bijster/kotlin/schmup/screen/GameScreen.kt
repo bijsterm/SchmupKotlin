@@ -9,7 +9,8 @@ import nl.bijster.kotlin.schmup.Shmup
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
 import nl.bijster.kotlin.schmup.attackwave.drops.Drops
 import nl.bijster.kotlin.schmup.player.Player
-import nl.bijster.kotlin.schmup.types.HiScoreTable
+import nl.bijster.kotlin.schmup.scores.HiScoreTable
+import nl.bijster.kotlin.schmup.scores.Score
 
 
 class GameScreen(private val shmup: Shmup) : KtxScreen {
@@ -27,9 +28,6 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
     private val camera: OrthographicCamera = OrthographicCamera().apply {
         setToOrtho(false, 800f, 600f)
     }
-
-
-    private var score: Int = 0
 
 
 
@@ -50,7 +48,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
             val gameOver = player.die()
             if (gameOver) {
                 switchScreens()
-                HiScoreTable.add(score, 1.0)
+                HiScoreTable += Pair(Score.score, 1.0)
+                Score.score = 0
             }
 
         }
@@ -58,7 +57,7 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         // begin a new batch and draw all
         shmup.batch.use {
             // 0. Text
-            shmup.font.draw(it, "Score: $score", 0f, 600f)
+            shmup.font.draw(it, "Score: ${Score.score}", 0f, 600f)
             shmup.font.draw(it, "Nr. Lives: ${player.nrOfLives}", 500f, 600f)
             // 1. Draw player first
             player.draw(it)

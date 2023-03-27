@@ -1,4 +1,4 @@
-package nl.bijster.kotlin.schmup.types
+package nl.bijster.kotlin.schmup.scores
 
 
 class HiScoreTable() {
@@ -20,8 +20,8 @@ class HiScoreTable() {
             return hiScores
         }
 
-        fun add(key: Int, value: Double) {
-            hiScores.add(Pair(key, value))
+        operator fun plusAssign(scoreAndLevel: Pair<Int, Double>) {
+            hiScores.add(scoreAndLevel)
             hiScores = hiScores.sortedWith(ScoreAndLevelComparator).take(10).toMutableList()
         }
 

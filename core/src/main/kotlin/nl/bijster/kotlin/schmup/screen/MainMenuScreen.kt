@@ -8,7 +8,7 @@ import ktx.graphics.use
 import nl.bijster.kotlin.schmup.Shmup
 import nl.bijster.kotlin.schmup.constants.SCREEN_HEIGHT
 import nl.bijster.kotlin.schmup.constants.SCREEN_WIDTH
-import nl.bijster.kotlin.schmup.types.HiScoreTable
+import nl.bijster.kotlin.schmup.scores.HiScoreTable
 
 /** First screen of the application. Displayed after the application is created.  */
 class MainMenuScreen(private val shmup: Shmup) : KtxScreen {

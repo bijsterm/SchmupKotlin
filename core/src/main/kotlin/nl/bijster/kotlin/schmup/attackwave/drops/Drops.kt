@@ -2,6 +2,7 @@ package nl.bijster.kotlin.schmup.attackwave.drops
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ktx.log.logger
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
+import nl.bijster.kotlin.schmup.scores.Score
 import nl.bijster.kotlin.schmup.types.GameObject
 
 private val log = logger<Drops>()
@@ -35,11 +37,12 @@ class Drops : AttackWave {
         val dropSprite = Sprite(dropImage).apply {
             x = MathUtils.random(0f, 800f - 64f)
             y = 600f
+            color = Color.YELLOW
         }
         val newDrop = Drop().apply {
             sprite = dropSprite
         }
-        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
+//        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
         lastDropTime = TimeUtils.nanoTime()
         return newDrop
     }
@@ -60,11 +63,11 @@ class Drops : AttackWave {
             if (raindrop.sprite.y + 64 >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
-//                score++
+                Score += 1
             }
 
         }
-        log.debug { "Nr of drops: ${newDropsList.size}" }
+//        log.debug { "Nr of drops: ${newDropsList.size}" }
         raindrops = newDropsList
     }
 
