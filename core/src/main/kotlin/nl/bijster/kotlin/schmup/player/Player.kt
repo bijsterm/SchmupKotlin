@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import ktx.log.debug
 import nl.bijster.kotlin.schmup.constants.SCREEN_WIDTH
@@ -64,10 +65,17 @@ class Player(var nrOfLives: Int) : GameObjectFlow {
 
     }
 
-    override fun draw(batch: SpriteBatch) {
+    override fun draw(batch: SpriteBatch, rectBatch: ShapeRenderer) {
 //        batch.draw(playerImage, playerRectangle.x, playerRectangle.y, playerRectangle.width, playerRectangle.height)
 //        batch.draw(playerSprite, playerSprite.x, playerSprite.y, 10f, 10f)
         playerSprite.draw(batch)
+        rectBatch.rect(
+            playerSprite.boundingRectangle.x,
+            playerSprite.boundingRectangle.y,
+            playerSprite.boundingRectangle.width,
+            playerSprite.boundingRectangle.height
+        )
+
     }
 
     override fun dispose() {

@@ -1,6 +1,7 @@
 package nl.bijster.kotlin.schmup.attackwave
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import nl.bijster.kotlin.schmup.types.GameObject
 
 interface AttackWave {
@@ -20,7 +21,7 @@ interface AttackWave {
     /**
      * Draw all GameObjects
      */
-    fun draw(batch: SpriteBatch)
+    fun draw(batch: SpriteBatch, rectBatch: ShapeRenderer)
 
     /**
      * Cleanup all GameObjects

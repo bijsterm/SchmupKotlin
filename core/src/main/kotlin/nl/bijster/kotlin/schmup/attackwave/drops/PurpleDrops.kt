@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
@@ -81,13 +82,19 @@ class PurpleDrops : AttackWave {
         }
     }
 
-    override fun draw(batch: SpriteBatch) {
+    override fun draw(batch: SpriteBatch, rectBatch: ShapeRenderer) {
 
         // 2. Attachwaves
         raindrops.filter { raindrop ->
             raindrop.isVisible
         }.forEach { raindrop ->
             raindrop.sprite.draw(batch)
+            rectBatch.rect(
+                raindrop.sprite.boundingRectangle.x,
+                raindrop.sprite.boundingRectangle.y,
+                raindrop.sprite.boundingRectangle.width,
+                raindrop.sprite.boundingRectangle.height
+            )
         }
     }
 
