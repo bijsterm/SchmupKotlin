@@ -21,7 +21,7 @@ interface AttackWave {
     /**
      * Draw all GameObjects
      */
-    fun draw(batch: SpriteBatch, rectBatch: ShapeRenderer)
+    fun drawAttackWave(batch: SpriteBatch, rectBatch: ShapeRenderer)
 
     /**
      * Cleanup all GameObjects

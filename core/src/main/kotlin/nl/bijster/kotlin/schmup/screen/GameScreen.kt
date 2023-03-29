@@ -13,6 +13,7 @@ import nl.bijster.kotlin.schmup.attackwave.drops.PurpleDrops
 import nl.bijster.kotlin.schmup.player.Player
 import nl.bijster.kotlin.schmup.scores.HiScoreTable
 import nl.bijster.kotlin.schmup.scores.Score
+import nl.bijster.kotlin.schmup.types.GameObject
 
 
 class GameScreen(private val shmup: Shmup) : KtxScreen {
@@ -69,8 +70,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
             // 1. Draw player first
             player.draw(it, shmup.rectBatch)
 
-            greenDrops.draw(it, shmup.rectBatch)
-            purpleDrops.draw(it, shmup.rectBatch)
+            greenDrops.drawAttackWave(it, shmup.rectBatch)
+            purpleDrops.drawAttackWave(it, shmup.rectBatch)
 
             // 3. Bullets
 
@@ -100,6 +101,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         shmup.batch.projectionMatrix = camera.combined
         shmup.rectBatch.projectionMatrix = camera.combined
 
+        // Show the boundingBoxes
+        GameObject.showBoundingBoxes = true
 
         shmup.font.data.setScale(3f)
 
