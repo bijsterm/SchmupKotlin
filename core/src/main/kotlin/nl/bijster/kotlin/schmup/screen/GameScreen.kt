@@ -44,8 +44,8 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         // 2. Player Bullets
 
         // 3. Attack-waves
-        greenDrops.update(delta)
-        purpleDrops.update(delta)
+        greenDrops.update(delta, player.playerSprite.x, player.playerSprite.y)
+        purpleDrops.update(delta, player.playerSprite.x, player.playerSprite.y)
 
         greenDrops.detectAndHandleCollision(player.playerGameObject)
         purpleDrops.detectAndHandleCollision(player.playerGameObject)

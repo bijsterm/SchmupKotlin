@@ -13,6 +13,8 @@ import nl.bijster.kotlin.schmup.attackwave.AttackWave
 import nl.bijster.kotlin.schmup.scores.Score
 import nl.bijster.kotlin.schmup.types.GameObject
 
+private const val PURPLE_DROP_SPEED = 300
+
 class PurpleDrops : AttackWave {
 
     // load the images for the droplet, 64x64 pixels each
@@ -33,7 +35,7 @@ class PurpleDrops : AttackWave {
 
     private fun spawnRaindrop(): Drop {
         val dropSprite = Sprite(dropImage).apply {
-            x = MathUtils.random(0f, 800f - 64f)
+            x = MathUtils.random(0f, 800f - width)
             y = 600f
             color = Color.RED
         }
@@ -45,7 +47,7 @@ class PurpleDrops : AttackWave {
         return newDrop
     }
 
-    override fun update(dt: Float) {
+    override fun update(dt: Float, playerX: Float, playerY: Float) {
         val newDropsList: MutableList<Drop> = mutableListOf()
 
         // check if we need to create a new raindrop
@@ -57,13 +59,12 @@ class PurpleDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            raindrop.sprite.y -= 200 * Gdx.graphics.deltaTime
-            if (raindrop.sprite.y + 64 >= 0 || !raindrop.isVisible) {
+            raindrop.sprite.y -= PURPLE_DROP_SPEED * Gdx.graphics.deltaTime
+            if (raindrop.sprite.y + raindrop.sprite.height >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
-                Score += 1
+                Score += 2
             }
-
         }
 //        log.debug { "Nr of drops: ${newDropsList.size}" }
         raindrops = newDropsList

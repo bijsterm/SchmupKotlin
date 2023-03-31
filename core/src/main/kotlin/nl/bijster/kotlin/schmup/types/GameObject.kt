@@ -10,7 +10,12 @@ open class GameObject {
     var hasCollided = false
 
     fun draw(rectBatch: ShapeRenderer) {
-        if (showBoundingBoxes) rectBatch.rect(this.sprite.x, this.sprite.y, this.sprite.width, this.sprite.height)
+        if (showBoundingBoxes) rectBatch.rect(
+            sprite.boundingRectangle.x,
+            sprite.boundingRectangle.y,
+            sprite.boundingRectangle.width,
+            sprite.boundingRectangle.height
+        )
     }
 
     fun draw(batch: SpriteBatch) {

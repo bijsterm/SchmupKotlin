@@ -16,6 +16,8 @@ import nl.bijster.kotlin.schmup.types.GameObject
 
 private val log = logger<GreenDrops>()
 
+private const val GREEN_DROP_SPEED = 200
+
 class GreenDrops : AttackWave {
 
     // load the images for the droplet, 64x64 pixels each
@@ -36,7 +38,7 @@ class GreenDrops : AttackWave {
 
     private fun spawnRaindrop(): Drop {
         val dropSprite = Sprite(dropImage).apply {
-            x = MathUtils.random(0f, 800f - 64f)
+            x = MathUtils.random(0f, 800f - width)
             y = 600f
             color = Color.YELLOW
         }
@@ -48,7 +50,7 @@ class GreenDrops : AttackWave {
         return newDrop
     }
 
-    override fun update(dt: Float) {
+    override fun update(dt: Float, playerX: Float, playerY: Float) {
         val newDropsList: MutableList<Drop> = mutableListOf()
 
         // check if we need to create a new raindrop
@@ -60,8 +62,9 @@ class GreenDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            raindrop.sprite.y -= 200 * Gdx.graphics.deltaTime
-            if (raindrop.sprite.y + 64 >= 0 || !raindrop.isVisible) {
+            raindrop.sprite.y -= GREEN_DROP_SPEED * Gdx.graphics.deltaTime
+            raindrop.sprite.rotation += 1
+            if (raindrop.sprite.y + raindrop.sprite.width >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
                 Score += 1

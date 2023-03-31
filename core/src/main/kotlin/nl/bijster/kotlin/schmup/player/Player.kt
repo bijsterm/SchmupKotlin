@@ -20,7 +20,7 @@ class Player(var nrOfLives: Int) : GameObjectFlow {
 // TODO:   private val playerHitboxImage: Texture = Texture(Gdx.files.internal("images/Player_Hitbox.png"))
 
     lateinit var playerGameObject: GameObject
-    private lateinit var playerSprite: Sprite
+    lateinit var playerSprite: Sprite
     fun die(): Boolean {
         nrOfLives -= 1
         playerGameObject.hasCollided = false // reset hasCollided

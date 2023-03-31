@@ -14,7 +14,7 @@ interface AttackWave {
     /**
      * Update all GameObject and return them for collision detection
      */
-    fun update(dt: Float)
+    fun update(dt: Float, playerX: Float, playerY: Float)
 
     fun detectAndHandleCollision(player: GameObject)
 
