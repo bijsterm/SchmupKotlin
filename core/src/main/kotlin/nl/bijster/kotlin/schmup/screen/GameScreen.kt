@@ -44,23 +44,26 @@ class GameScreen(private val shmup: Shmup) : KtxScreen {
         // 2. Player Bullets
 
         // 3. Attack-waves
-        greenDrops.update(delta, player.playerSprite.x, player.playerSprite.y)
-        purpleDrops.update(delta, player.playerSprite.x, player.playerSprite.y)
+        val playerSprite = player.playerGameObject.sprite
+        greenDrops.update(delta, playerSprite.x, playerSprite.y)
+        purpleDrops.update(delta, playerSprite.x, playerSprite.y)
 
         greenDrops.detectAndHandleCollision(player.playerGameObject)
         purpleDrops.detectAndHandleCollision(player.playerGameObject)
 
-        if (player.playerGameObject.hasCollided) {
+        if (player.playerGameObject.collidedWith.isNotEmpty()) {
+            // TODO: wat te doen als de speler geraakt is door iets?
             val gameOver = player.die()
             if (gameOver) {
+                HiScoreTable += Pair(Score.score, 1.0)              // Add score to Hi-score table
+                Score.score = 0                                     // Reset score to 0
                 switchScreens()
-                HiScoreTable += Pair(Score.score, 1.0)
-                Score.score = 0
             }
 
         }
 
         shmup.rectBatch.begin(ShapeRenderer.ShapeType.Line)
+//        shmup.rectBatch.polygon(floatArrayOf(10f, 10f, 100f, 10f, 100f, 200f, 10f, 200f))
 
         // begin a new batch and draw all
         shmup.batch.use {

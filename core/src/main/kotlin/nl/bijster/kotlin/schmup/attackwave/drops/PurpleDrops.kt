@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.FloatArray
 import com.badlogic.gdx.utils.TimeUtils
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
 import nl.bijster.kotlin.schmup.scores.Score
@@ -39,7 +41,7 @@ class PurpleDrops : AttackWave {
             y = 600f
             color = Color.RED
         }
-        val newDrop = Drop().apply {
+        val newDrop = Drop(dropImage).apply {
             sprite = dropSprite
         }
 //        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
@@ -59,8 +61,11 @@ class PurpleDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            raindrop.sprite.y -= PURPLE_DROP_SPEED * Gdx.graphics.deltaTime
-            if (raindrop.sprite.y + raindrop.sprite.height >= 0 || !raindrop.isVisible) {
+            val sprite = raindrop.sprite
+            sprite.y -= PURPLE_DROP_SPEED * Gdx.graphics.deltaTime
+            raindrop.hitbox.setPosition(sprite.x, sprite.y)
+
+            if (sprite.y + sprite.height >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
                 Score += 2
@@ -74,8 +79,12 @@ class PurpleDrops : AttackWave {
         val raindropsIterator = raindrops.iterator()
         while (raindropsIterator.hasNext()) {
             val drop = raindropsIterator.next()
-            if (drop.sprite.boundingRectangle.overlaps(player.sprite.boundingRectangle)) {
-                player.hasCollided = true
+            if (Intersector.intersectPolygons(
+                    FloatArray(drop.hitbox.transformedVertices),
+                    FloatArray(player.hitbox.transformedVertices)
+                )
+            ) {
+                player.collidedWith.add(drop)
                 dropSound.play()
 
                 raindropsIterator.remove()  // Remove current element
@@ -94,6 +103,7 @@ class PurpleDrops : AttackWave {
 
         }
     }
+
 
     override fun cleanup() {
         dropImage.dispose()

@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.FloatArray
 import com.badlogic.gdx.utils.TimeUtils
 import ktx.log.logger
 import nl.bijster.kotlin.schmup.attackwave.AttackWave
@@ -37,17 +38,16 @@ class GreenDrops : AttackWave {
     }
 
     private fun spawnRaindrop(): Drop {
-        val dropSprite = Sprite(dropImage).apply {
-            x = MathUtils.random(0f, 800f - width)
-            y = 600f
-            color = Color.YELLOW
-        }
-        val newDrop = Drop().apply {
-            sprite = dropSprite
+        val drop = Drop(dropImage).apply {
+            sprite.apply {
+                x = MathUtils.random(0f, 800f - width)
+                y = 600f
+                color = Color.YELLOW
+            }
         }
 //        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
         lastDropTime = TimeUtils.nanoTime()
-        return newDrop
+        return drop
     }
 
     override fun update(dt: Float, playerX: Float, playerY: Float) {
@@ -62,9 +62,18 @@ class GreenDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            raindrop.sprite.y -= GREEN_DROP_SPEED * Gdx.graphics.deltaTime
-            raindrop.sprite.rotation += 1
-            if (raindrop.sprite.y + raindrop.sprite.width >= 0 || !raindrop.isVisible) {
+            raindrop.sprite.apply {
+                y -= GREEN_DROP_SPEED * Gdx.graphics.deltaTime
+                rotation += 1
+            }
+
+            // Make hitbox 'follow' the sprite
+            raindrop.hitbox.apply {
+                setPosition(raindrop.sprite.x, raindrop.sprite.y)
+                rotation = raindrop.sprite.rotation
+            }
+
+            if (raindrop.sprite.y + raindrop.sprite.height >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
                 Score += 1
@@ -79,8 +88,12 @@ class GreenDrops : AttackWave {
         val raindropsIterator = raindrops.iterator()
         while (raindropsIterator.hasNext()) {
             val drop = raindropsIterator.next()
-            if (drop.sprite.boundingRectangle.overlaps(player.sprite.boundingRectangle)) {
-                player.hasCollided = true
+            if (Intersector.intersectPolygons(
+                    FloatArray(drop.hitbox.transformedVertices),
+                    FloatArray(player.hitbox.transformedVertices)
+                )
+            ) {
+                player.collidedWith.add(drop)
                 dropSound.play()
 
                 raindropsIterator.remove()  // Remove current element
