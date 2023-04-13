@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Polygon
 
 
 open class GameObject(private val texture: Texture) {
+
     var sprite: Sprite = Sprite(texture).apply {
         setOriginCenter()
     }
@@ -20,6 +21,35 @@ open class GameObject(private val texture: Texture) {
     )
     var hitbox: Polygon = Polygon(baseVertices).apply {
         setOrigin(texture.width / 2f, texture.height / 2f)
+    }
+
+    var width: Float = texture.width.toFloat()
+    var height: Float = texture.height.toFloat()
+
+    var x: Float = 0f
+        set(xPos) {
+            field = xPos
+            sprite.x = xPos
+            hitbox.setPosition(xPos, y) // There's no setter for the x
+        }
+
+    var y: Float = 0f
+        set(yPos) {
+            field = yPos
+            sprite.y = yPos
+            hitbox.setPosition(x, yPos) // There is no setter for the y
+        }
+
+    var rotation: Float = 0f
+        set(degrees) {
+            field = degrees
+            sprite.rotation = degrees
+            hitbox.rotation = degrees
+        }
+
+    fun setScale(scaleX: Float, scaleY: Float) {
+        sprite.setScale(scaleX, scaleY)
+        hitbox.setScale(scaleX, scaleY)
     }
 
     var isVisible = true

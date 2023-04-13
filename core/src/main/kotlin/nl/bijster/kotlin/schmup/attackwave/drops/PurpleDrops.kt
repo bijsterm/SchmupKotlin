@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Intersector
@@ -15,7 +14,7 @@ import nl.bijster.kotlin.schmup.attackwave.AttackWave
 import nl.bijster.kotlin.schmup.scores.Score
 import nl.bijster.kotlin.schmup.types.GameObject
 
-private const val PURPLE_DROP_SPEED = 300
+private const val PURPLE_DROP_SPEED = 150
 
 class PurpleDrops : AttackWave {
 
@@ -36,17 +35,15 @@ class PurpleDrops : AttackWave {
     }
 
     private fun spawnRaindrop(): Drop {
-        val dropSprite = Sprite(dropImage).apply {
+        val drop = Drop(dropImage).apply {
             x = MathUtils.random(0f, 800f - width)
             y = 600f
-            color = Color.RED
-        }
-        val newDrop = Drop(dropImage).apply {
-            sprite = dropSprite
+            sprite.color = Color.RED
+            setScale(0.8f, 2.5f)
         }
 //        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
         lastDropTime = TimeUtils.nanoTime()
-        return newDrop
+        return drop
     }
 
     override fun update(dt: Float, playerX: Float, playerY: Float) {
@@ -61,11 +58,10 @@ class PurpleDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            val sprite = raindrop.sprite
-            sprite.y -= PURPLE_DROP_SPEED * Gdx.graphics.deltaTime
-            raindrop.hitbox.setPosition(sprite.x, sprite.y)
+            raindrop.y -= PURPLE_DROP_SPEED * Gdx.graphics.deltaTime
+            raindrop.rotation -= 0.7f
 
-            if (sprite.y + sprite.height >= 0 || !raindrop.isVisible) {
+            if (raindrop.y + raindrop.height >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
                 Score += 2

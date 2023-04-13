@@ -22,11 +22,8 @@ class Player(var nrOfLives: Int) : GameObjectFlow {
 
     private fun createPlayerGameObject() {
         playerGameObject = GameObject(playerImage).apply {
-            sprite.apply {
-                x = (SCREEN_WIDTH - width) / 2f // center the bucket horizontally
-                y = 20f // bottom left bucket corner is 20px above
-            }
-            hitbox.setOrigin(sprite.width / 2f, sprite.height / 2f)
+            x = (SCREEN_WIDTH - width) / 2f // center the bucket horizontally
+            y = 20f // bottom left bucket corner is 20px above
             hitbox.setScale(0.1f, 0.1f)
         }
     }
@@ -45,27 +42,26 @@ class Player(var nrOfLives: Int) : GameObjectFlow {
     }
 
     override fun update(deltaTime: Float) {
-        val playerSprite = playerGameObject.sprite
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             // getDeltaTime returns the time passed between the last and the current frame in seconds
-            playerSprite.x -= PLAYER_SPEED * deltaTime
+            playerGameObject.x -= PLAYER_SPEED * deltaTime
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            playerSprite.x += PLAYER_SPEED * deltaTime
+            playerGameObject.x += PLAYER_SPEED * deltaTime
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             // getDeltaTime returns the time passed between the last and the current frame in seconds
-            playerSprite.y += PLAYER_SPEED * deltaTime
+            playerGameObject.y += PLAYER_SPEED * deltaTime
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            playerSprite.y -= PLAYER_SPEED * deltaTime
+            playerGameObject.y -= PLAYER_SPEED * deltaTime
         }
 
         // make sure the bucket stays within the screen bounds
-        playerSprite.x = MathUtils.clamp(playerSprite.x, 0f, 800 - playerSprite.width)
-        playerSprite.y = MathUtils.clamp(playerSprite.y, 0f, 600 - playerSprite.height)
+        playerGameObject.x = MathUtils.clamp(playerGameObject.x, 0f, 800 - playerGameObject.width)
+        playerGameObject.y = MathUtils.clamp(playerGameObject.y, 0f, 600 - playerGameObject.height)
 
-        playerGameObject.hitbox.setPosition(playerSprite.x, playerSprite.y)
+//        playerGameObject.hitbox.setPosition(playerSprite.x, playerSprite.y)
     }
 
     override fun draw(batch: SpriteBatch, rectBatch: ShapeRenderer) {

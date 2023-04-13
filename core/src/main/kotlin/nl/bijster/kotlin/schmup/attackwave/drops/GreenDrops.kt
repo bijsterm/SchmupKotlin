@@ -39,11 +39,9 @@ class GreenDrops : AttackWave {
 
     private fun spawnRaindrop(): Drop {
         val drop = Drop(dropImage).apply {
-            sprite.apply {
-                x = MathUtils.random(0f, 800f - width)
-                y = 600f
-                color = Color.YELLOW
-            }
+            x = MathUtils.random(0f, 800f - width)
+            y = 600f
+            sprite.color = Color.YELLOW
         }
 //        log.debug { "DropX: ${newDrop.sprite.x} DropY: ${newDrop.sprite.y}" }
         lastDropTime = TimeUtils.nanoTime()
@@ -62,18 +60,10 @@ class GreenDrops : AttackWave {
         //    effect also
 
         for (raindrop in raindrops) {
-            raindrop.sprite.apply {
-                y -= GREEN_DROP_SPEED * Gdx.graphics.deltaTime
-                rotation += 1
-            }
+            raindrop.y -= GREEN_DROP_SPEED * Gdx.graphics.deltaTime
+            raindrop.rotation += 1
 
-            // Make hitbox 'follow' the sprite
-            raindrop.hitbox.apply {
-                setPosition(raindrop.sprite.x, raindrop.sprite.y)
-                rotation = raindrop.sprite.rotation
-            }
-
-            if (raindrop.sprite.y + raindrop.sprite.height >= 0 || !raindrop.isVisible) {
+            if (raindrop.y + raindrop.height >= 0 || !raindrop.isVisible) {
                 newDropsList.add(raindrop)
             } else {
                 Score += 1
@@ -116,8 +106,6 @@ class GreenDrops : AttackWave {
     override fun cleanup() {
         dropImage.dispose()
         dropSound.dispose()
-
-
     }
 
 }
