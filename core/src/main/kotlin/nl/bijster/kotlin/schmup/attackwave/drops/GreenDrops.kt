@@ -3,7 +3,6 @@ package nl.bijster.kotlin.schmup.attackwave.drops
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Intersector
@@ -21,9 +20,6 @@ private const val GREEN_DROP_SPEED = 200
 
 class GreenDrops : AttackWave {
 
-    // load the images for the droplet, 64x64 pixels each
-    private lateinit var dropImage: Texture
-
     // create the raindrops array and spawn the first raindrop
     private lateinit var raindrops: MutableList<Drop>
 
@@ -32,13 +28,13 @@ class GreenDrops : AttackWave {
     private var lastDropTime: Long = 0L
 
     override fun init() {
-        dropImage = Texture(Gdx.files.internal("images/drop.png"))
+
         raindrops = mutableListOf()
         dropSound = Gdx.audio.newSound(Gdx.files.internal("sounds/drop.wav"))
     }
 
     private fun spawnRaindrop(): Drop {
-        val drop = Drop(dropImage).apply {
+        val drop = Drop().apply {
             x = MathUtils.random(0f, 800f - width)
             y = 600f
             sprite.color = Color.YELLOW
@@ -104,7 +100,6 @@ class GreenDrops : AttackWave {
 
 
     override fun cleanup() {
-        dropImage.dispose()
         dropSound.dispose()
     }
 
